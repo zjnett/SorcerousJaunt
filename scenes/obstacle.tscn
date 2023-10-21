@@ -1,3 +1,18 @@
-[gd_scene format=3 uid="uid://djcfu1w5dvh8n"]
+[gd_scene load_steps=4 format=3 uid="uid://djcfu1w5dvh8n"]
 
-[node name="Obstacle" type="Node2D"]
+[ext_resource type="Script" path="res://src/Obstacle.cs" id="1_8yjbn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_en08k"]
+size = Vector2(600, 32)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_j47ws"]
+
+[node name="Obstacle" type="Area2D"]
+script = ExtResource("1_8yjbn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_en08k")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(600, 32)
+texture = SubResource("PlaceholderTexture2D_j47ws")

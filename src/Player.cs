@@ -29,7 +29,7 @@ public partial class Player : CharacterBody2D
 
         Velocity = velocity;
 
-        GD.Print(Velocity);
+        // GD.Print(Velocity);
         MoveAndSlide();
     }
 
