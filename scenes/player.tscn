@@ -8,7 +8,7 @@ size = Vector2(64, 64)
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_tvriu"]
 
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(292, 0)
+position = Vector2(-1, 0)
 script = ExtResource("1_p7krb")
 metadata/_edit_group_ = true
 

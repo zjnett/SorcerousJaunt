@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://djcfu1w5dvh8n"]
+
+[node name="Obstacle" type="Node2D"]

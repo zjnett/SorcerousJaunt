@@ -14,7 +14,11 @@ public partial class Player : CharacterBody2D
     public override void _PhysicsProcess(double delta)
     {
         var velocity = Velocity;
-        velocity.Y += Gravity * (float)delta;
+
+        if (!IsOnFloor())
+        {
+            velocity.Y += Gravity * (float)delta;
+        }
 
         if (Input.IsActionPressed("jump"))
         {
@@ -25,8 +29,7 @@ public partial class Player : CharacterBody2D
 
         Velocity = velocity;
 
-        var motion = velocity * (float)delta;
-        MoveAndCollide(motion);
+        MoveAndSlide();
     }
 
     public void Die()
