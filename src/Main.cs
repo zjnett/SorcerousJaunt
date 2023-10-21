@@ -23,7 +23,6 @@ public partial class Main : Node
     {
         // Instantiate a new obstacle in the scene
         Obstacle obstacle = ObstacleScene.Instantiate<Obstacle>();
-        GD.Print(obstacle);
 
         // Set the initial obstacle position to the same as the floor but off
         // the right hand side of the screen
@@ -33,7 +32,6 @@ public partial class Main : Node
 
         // Set the obstacle's initial position
         obstacle.Position = obstaclePosition;
-        GD.Print(obstacle.Position);
 
         // Add the obstacle to the scene
         AddChild(obstacle);
