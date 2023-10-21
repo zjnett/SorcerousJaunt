@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bnorws2attqbw"]
+[gd_scene load_steps=6 format=3 uid="uid://bnorws2attqbw"]
 
 [ext_resource type="PackedScene" uid="uid://c6ptxxioew5n6" path="res://scenes/player.tscn" id="1_1vhyw"]
+[ext_resource type="Script" path="res://src/Main.cs" id="1_8ikqg"]
+[ext_resource type="PackedScene" uid="uid://djcfu1w5dvh8n" path="res://scenes/obstacle.tscn" id="2_xeb8r"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_18ua4"]
 
@@ -8,6 +10,8 @@
 size = Vector2(194, 20)
 
 [node name="Main" type="Node"]
+script = ExtResource("1_8ikqg")
+ObstacleScene = ExtResource("2_xeb8r")
 
 [node name="Player" parent="." instance=ExtResource("1_1vhyw")]
 position = Vector2(242, 180)

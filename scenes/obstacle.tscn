@@ -16,3 +16,8 @@ shape = SubResource("RectangleShape2D_en08k")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(600, 32)
 texture = SubResource("PlaceholderTexture2D_j47ws")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-300, -16, 600, 32)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="OnVisibleOnScreenNotified2DScreenExited"]
