@@ -8,8 +8,15 @@ public partial class Main : Node
 
     public override void _Ready()
     {
-        var player = GetNode<Player>("Player");
+        // Setup handling here
+    }
+
+    private void OnObstacleSpawnTimerTimeout()
+    {
         SpawnObstacles();
+        // Set the timer to a random value between 0.5 and 5 seconds
+        var timer = GetNode<Timer>("ObstacleSpawnTimer");
+        timer.WaitTime = new Random().Next(500, 5000) / 1000f;
     }
 
     private void SpawnObstacles()
