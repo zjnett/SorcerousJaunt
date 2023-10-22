@@ -6,11 +6,17 @@ public partial class Main : Node
 {
     [Export]
     public PackedScene ObstacleScene { get; set; }
+    [Export]
+    public PackedScene CoinScene { get; set; }
+
 
     public override void _Ready()
     {
         // Setup handling here
         GD.Randomize();
+
+        // Spawn a random coin pattern
+        SpawnCoinPattern();
     }
 
     private void OnObstacleSpawnTimerTimeout()
@@ -19,6 +25,15 @@ public partial class Main : Node
         // Set the timer to a random value between 0.5 and 5 seconds
         var timer = GetNode<Timer>("ObstacleSpawnTimer");
         timer.WaitTime = new Random().Next(500, 5000) / 1000f;
+    }
+
+    private void OnCoinSpawnTimerTimeout()
+    {
+        // Destroy all coins in the scene
+        DestroyAllCoins();
+
+        // Spawn a random coin pattern
+        SpawnCoinPattern();
     }
 
     private enum ObstacleArrangement : uint
@@ -63,7 +78,6 @@ public partial class Main : Node
                 obstacle2.Position = ceilingPosition;
                 AddChild(obstacle2);
                 break;
-            
         }
 
         // Set the obstacle's initial position
@@ -71,5 +85,38 @@ public partial class Main : Node
 
         // Add the obstacle to the scene
         AddChild(obstacle);
+    }
+
+    private void SpawnCoinPattern()
+    {
+        // Get coin pattern generator
+        CoinPatternGenerator coinPatternGenerator = GetNode<CoinPatternGenerator>("CoinPatternGenerator");
+
+        Array<Vector2I> randomPattern = coinPatternGenerator.GenerateRandomPattern();
+
+        // Generate a new coin for every position in the pattern
+        foreach (Vector2I position in randomPattern)
+        {
+            // Instantiate a new coin in the scene
+            Coin coin = CoinScene.Instantiate<Coin>();
+
+            // Set the coin's initial position
+            coin.Position = position;
+
+            // Add the coin to the scene
+            AddChild(coin);
+
+            // Add coin to the "Coins" group
+            coin.AddToGroup("Coins");
+        }
+    }
+
+    private void DestroyAllCoins()
+    {
+        // Free every object of type Coin in the scene
+        foreach (Coin coin in GetTree().GetNodesInGroup("Coins"))
+        {
+            coin.QueueFree();
+        }
     }
 }

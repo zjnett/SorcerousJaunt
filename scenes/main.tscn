@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bnorws2attqbw"]
+[gd_scene load_steps=8 format=3 uid="uid://bnorws2attqbw"]
 
 [ext_resource type="PackedScene" uid="uid://c6ptxxioew5n6" path="res://scenes/player.tscn" id="1_1vhyw"]
 [ext_resource type="Script" path="res://src/Main.cs" id="1_8ikqg"]
 [ext_resource type="PackedScene" uid="uid://djcfu1w5dvh8n" path="res://scenes/obstacle.tscn" id="2_xeb8r"]
+[ext_resource type="PackedScene" uid="uid://dt43r7n05jthg" path="res://scenes/coin.tscn" id="4_nalwa"]
+[ext_resource type="PackedScene" uid="uid://x08qls864spv" path="res://scenes/coinpatterngenerator.tscn" id="5_smept"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_18ua4"]
 
@@ -12,6 +14,7 @@ size = Vector2(194, 20)
 [node name="Main" type="Node"]
 script = ExtResource("1_8ikqg")
 ObstacleScene = ExtResource("2_xeb8r")
+CoinScene = ExtResource("4_nalwa")
 
 [node name="Player" parent="." instance=ExtResource("1_1vhyw")]
 position = Vector2(242, 180)
@@ -33,4 +36,11 @@ shape = SubResource("RectangleShape2D_ryt42")
 wait_time = 4.0
 autostart = true
 
+[node name="CoinSpawnTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="CoinPatternGenerator" parent="." instance=ExtResource("5_smept")]
+
 [connection signal="timeout" from="ObstacleSpawnTimer" to="." method="OnObstacleSpawnTimerTimeout"]
+[connection signal="timeout" from="CoinSpawnTimer" to="." method="OnCoinSpawnTimerTimeout"]
