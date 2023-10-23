@@ -4,6 +4,7 @@ using Godot.Collections;
 
 public partial class CoinPatternGenerator : Node2D
 {
+    public int ShiftAmount { get; set; } = 48;
     public override void _Ready()
     {
         GD.Randomize();
@@ -28,18 +29,24 @@ public partial class CoinPatternGenerator : Node2D
         // Note this can be optimized via caching pre-generated patterns.
 
         // Note coin positions should be placed relative to the center of the viewport.
-        var centerX = GetViewportRect().Size.X / 2;
+        var centerX = GetViewportRect().Size.X;
         var centerY = GetViewportRect().Size.Y / 2;
 
         // Generate single coin pattern
-        CoinPatterns.Add(CoinArrangement.Single, new Array<Vector2I> { new Vector2I((int)centerX, (int)centerY) });
+        var singleCoinPattern = new Array<Vector2I>();
+        singleCoinPattern.Add(new Vector2I((int)centerX, (int)centerY));
+        singleCoinPattern = ShiftRightOffScreen(singleCoinPattern);
+        CoinPatterns.Add(CoinArrangement.Single, singleCoinPattern);
 
         // Generate line pattern
         var linePattern = new Array<Vector2I>();
         for (int i = 0; i < 5; i++)
         {
-            linePattern.Add(new Vector2I((int)centerX + i * 32, (int)centerY));
+            // 2x shift amount between each coin
+            linePattern.Add(new Vector2I((int)centerX + i * ShiftAmount * 2, (int)centerY));
         }
+
+        linePattern = ShiftRightOffScreen(linePattern);
 
         CoinPatterns.Add(CoinArrangement.Line, linePattern);
 
@@ -49,11 +56,12 @@ public partial class CoinPatternGenerator : Node2D
         {
             for (int j = 0; j < 5; j++)
             {
-                clusterPattern.Add(new Vector2I((int)centerX + i * 32, (int)centerY + j * 32));
+                clusterPattern.Add(new Vector2I((int)centerX + i * ShiftAmount, (int)centerY + j * ShiftAmount));
             }
         }
 
         clusterPattern = ShiftUpPositions(clusterPattern);
+        clusterPattern = ShiftRightOffScreen(clusterPattern);
 
         CoinPatterns.Add(CoinArrangement.Cluster, clusterPattern);
 
@@ -83,12 +91,13 @@ public partial class CoinPatternGenerator : Node2D
             {
                 if (diamondPattern2D[i, j] == 1)
                 {
-                    diamondPattern.Add(new Vector2I((int)centerX + i * 32, (int)centerY + j * 32));
+                    diamondPattern.Add(new Vector2I((int)centerX + i * ShiftAmount, (int)centerY + j * ShiftAmount));
                 }
             }
         }
 
         diamondPattern = ShiftUpPositions(diamondPattern);
+        diamondPattern = ShiftRightOffScreen(diamondPattern);
 
         CoinPatterns.Add(CoinArrangement.Diamond, diamondPattern);
 
@@ -98,10 +107,11 @@ public partial class CoinPatternGenerator : Node2D
         // We'll generate a sine wave with 10 peaks and 10 troughs
         for (int i = 0; i < 50; i++)
         {
-            sineWavePattern.Add(new Vector2I((int)centerX + i * 32, (int)centerY + (int)(Math.Sin(i) * 32)));
+            sineWavePattern.Add(new Vector2I((int)centerX + i * ShiftAmount, (int)centerY + (int)(Math.Sin(i) * ShiftAmount)));
         }
 
         sineWavePattern = ShiftUpPositions(sineWavePattern);
+        sineWavePattern = ShiftRightOffScreen(sineWavePattern);
 
         CoinPatterns.Add(CoinArrangement.SineWave, sineWavePattern);
 
@@ -114,10 +124,11 @@ public partial class CoinPatternGenerator : Node2D
         {
             const int amplitude = 10;
             const int period = 5;
-            zigZagPattern.Add(new Vector2I((int)centerX + i * 32, (int)centerY + ((amplitude/period) * (period - Math.Abs(i % (2*period) - period) ) * 32)));
+            zigZagPattern.Add(new Vector2I((int)centerX + i * ShiftAmount, (int)centerY + ((amplitude/period) * (period - Math.Abs(i % (2*period) - period) ) * ShiftAmount)));
         }
 
         zigZagPattern = ShiftUpPositions(zigZagPattern);
+        zigZagPattern = ShiftRightOffScreen(zigZagPattern);
 
         CoinPatterns.Add(CoinArrangement.ZigZag, zigZagPattern);
     }
@@ -145,12 +156,32 @@ public partial class CoinPatternGenerator : Node2D
         return shiftedPattern;
     }
 
+    private Array<Vector2I> ShiftRightOffScreen(Array<Vector2I> pattern)
+    {
+        // Find the rightmost coin position and shift all positions
+        // to the right of that position off the screen.
+        int rightmostX = 0;
+        foreach (Vector2I position in pattern)
+        {
+            if (position.X > rightmostX)
+            {
+                rightmostX = position.X;
+            }
+        }
+
+        var shiftedPattern = new Array<Vector2I>();
+        foreach (Vector2I position in pattern)
+        {
+            shiftedPattern.Add(new Vector2I(position.X + rightmostX, position.Y));
+        }
+        return shiftedPattern;
+    }
+
     public Array<Vector2I> GenerateRandomPattern()
     {
         // Returns a random pattern of coins represented by a list of coin positions
         // relative to the center of the viewport.
         uint randomPattern = GD.Randi() % (int)CoinArrangement.MAX;
-        GD.Print(randomPattern);
         return CoinPatterns[(CoinArrangement)randomPattern];
     }
 }

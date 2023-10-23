@@ -29,11 +29,11 @@ public partial class Main : Node
 
     private void OnCoinSpawnTimerTimeout()
     {
-        // Destroy all coins in the scene
-        DestroyAllCoins();
-
-        // Spawn a random coin pattern
-        SpawnCoinPattern();
+        // Spawn a random coin pattern (only if there are no coins in the scene)
+        if (GetTree().GetNodesInGroup("Coins").Count == 0)
+        {
+            SpawnCoinPattern();
+        }
     }
 
     private enum ObstacleArrangement : uint

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://x08qls864spv"]
 
-[ext_resource type="Script" path="res://scenes/CoinPatternGenerator.cs" id="1_b7nmd"]
+[ext_resource type="Script" path="res://src/CoinPatternGenerator.cs" id="1_b7nmd"]
 
 [node name="coinpatterngenerator" type="Node2D"]
 script = ExtResource("1_b7nmd")
